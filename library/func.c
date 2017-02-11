@@ -5,8 +5,8 @@
 typedef union UnFix32_ {
 	signed int iNum;
 	struct StFix32 {
-		unsigned int fraction: 24;
-		unsigned int decimal :  7;
+		unsigned int fraction: 23;
+		unsigned int decimal :  8;
 		unsigned int sign    :  1;
 	} stFix32;
 } UnFix32;
@@ -120,12 +120,12 @@ UnFix32 float2fix32(float fL) {
 		// convert float to integer, corresponding to decimal part
 		uF.stFix32.decimal = (unsigned int) fL;
 		fL = ( fL - (unsigned int)fL + 1.0);
-		uF.stFix32.fraction |= uFl->iNum << 1;
+		uF.stFix32.fraction |= uFl->iNum;
 		uF.iNum = (~uF.iNum + 1);
 	} else {
 		uF.stFix32.decimal = (unsigned int)fL;
 		fL = (fL - (unsigned int)fL + 1.0);
-		uF.stFix32.fraction |= uFl->iNum << 1;
+		uF.stFix32.fraction |= uFl->iNum;
 	}
 	return uF;
 }
@@ -160,11 +160,11 @@ float fix2float32(UnFix32 uF) {
 
 	if (uF.stFix32.sign) {
 		uF.iNum = ~(uF.iNum - 1);
-		uFl->stFloat.fraction |= uF.stFix32.fraction >> 1;
+		uFl->stFloat.fraction |= uF.stFix32.fraction;
 		fL = fL + (float)uF.stFix32.decimal - 1.0;
 		uFl->stFloat.sign = 1;
 	} else {
-		uFl->stFloat.fraction |= uF.stFix32.fraction >> 1;
+		uFl->stFloat.fraction |= uF.stFix32.fraction;
 		fL = fL + (float)uF.stFix32.decimal - 1.0;
 	}
 
